@@ -1,6 +1,6 @@
-# Academic Research Skills 更新紀錄
+# Academic Research Skills Changelog
 
-跨 skill 修復與更新歷史紀錄。同步自 [hei-skills-package](https://github.com/Imbad0202/hei-skills-package)。
+Cross-skill fixes and update history. Synced from [hei-skills-package](https://github.com/Imbad0202/hei-skills-package).
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### v2.2 / v1.3 Cross-Agent Quality Alignment Update (4 skills)
 
-**修改檔案**: 19 files across 4 skills (+550 lines)
+**Files changed**: 19 files across 4 skills (+550 lines)
 
 **deep-research v2.2**:
 - Added cross-agent quality alignment definitions (peer-reviewed, currency rule, CRITICAL severity, source tier, minimum source count, verification threshold)
@@ -43,26 +43,26 @@
 
 ### Simplify Academic Research Skills SKILL.md (4 files)
 
-**動機**: 4 個 academic research skills 合計 2,254 行，含大量跨 skill 重複、內嵌但已有 template 檔的冗餘內容。
+**Motivation**: 4 academic research skills totaled 2,254 lines with significant cross-skill duplication and redundant inline content already available as template files.
 
-**修改檔案**:
-- `academic-paper-reviewer/SKILL.md`（570→470, -100 行）
-- `academic-pipeline/SKILL.md`（675→535, -140 行）
-- `deep-research/SKILL.md`（469→435, -34 行）
-- `academic-paper/SKILL.md`（540→443, -97 行）
+**Files changed**:
+- `academic-paper-reviewer/SKILL.md` (570→470, -100 lines)
+- `academic-pipeline/SKILL.md` (675→535, -140 lines)
+- `deep-research/SKILL.md` (469→435, -34 lines)
+- `academic-paper/SKILL.md` (540→443, -97 lines)
 
-**修改摘要**:
-- A: Reviewer 移除內嵌模板，改引用 `templates/` 檔案（保留 Devil's Advocate 特殊格式說明）
-- B: Pipeline 移除 ASCII state machine，改為精簡 9-stage 列表 + 引用 reference
-- C: Pipeline 精簡 Two-Stage Review Protocol，只保留輸入/輸出/分支
-- D: 3 個 skill 的 "Full Academic Pipeline" 改為一行引用 `academic-pipeline/SKILL.md`
-- E: 4 個 skill 精簡路由表，移除已在根 CLAUDE.md 定義的 HEI 路由
-- F+G: 移除 deep-research 和 academic-paper 的重複 Mode Selection 區塊
-- H: academic-paper Handoff Protocol 精簡為概述 + 引用上游
-- I: academic-paper Phase 0 Config 改引用 `agents/intake_agent.md`
-- J: 4 個 skill Output Language 各精簡為 1 行
-- K: 修復 revision loop cap 矛盾（pipeline 覆蓋 academic-paper 的 max 2 規則）
+**Changes**:
+- A: Reviewer — removed inline templates, replaced with `templates/` file references (kept Devil's Advocate special format notes)
+- B: Pipeline — removed ASCII state machine, replaced with concise 9-stage list + reference
+- C: Pipeline — simplified Two-Stage Review Protocol to inputs/outputs/branching only
+- D: 3 skills — "Full Academic Pipeline" section replaced with one-line reference to `academic-pipeline/SKILL.md`
+- E: 4 skills — trimmed routing tables, removed HEI routes already defined in root CLAUDE.md
+- F+G: Removed duplicate Mode Selection sections from deep-research and academic-paper
+- H: academic-paper Handoff Protocol simplified to overview + upstream reference
+- I: academic-paper Phase 0 Config replaced with reference to `agents/intake_agent.md`
+- J: 4 skills — Output Language sections reduced to 1 line each
+- K: Fixed revision loop cap contradiction (pipeline overrides academic-paper's max 2 rule)
 
-**結果**: 2,254→1,883 行（-371 行, -16.5%），371 項品質測試全通過
+**Result**: 2,254→1,883 lines (-371 lines, -16.5%), all 371 quality tests passed
 
-**教訓**: SKILL.md 內嵌完整 template 內容是不必要的冗餘——只要 template 檔案存在且路徑正確，一行引用即可
+**Lesson**: Inlining full template content in SKILL.md is unnecessary redundancy — a one-line reference suffices when template files exist at the correct path
