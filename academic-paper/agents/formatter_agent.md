@@ -405,6 +405,96 @@ pandoc paper.md -o paper.docx \
 - Page numbers: Top right
 - Font: English Times New Roman 12pt / Chinese DFKai-SB 12pt
 
+### APA 7.0 LaTeX (`apa7` Class) — Mandatory Rules
+
+When the output format is APA 7.0 LaTeX, the formatter **MUST** use the `apa7` document class (not `article`). The following rules are mandatory to ensure correct PDF output.
+
+**Document class and mode**:
+```latex
+\documentclass[man,12pt,natbib]{apa7}
+```
+- `man` mode = manuscript format (double-spaced, running head)
+- `man` mode forces `\raggedright` after `\begin{document}` — must override (see below)
+
+**Font stack** (XeTeX required):
+```latex
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage{xeCJK}
+\setCJKmainfont{Source Han Serif TC VF}
+\setmonofont{Courier New}
+```
+
+**Text justification fix** (CRITICAL — without this, body text is ragged-right):
+```latex
+\usepackage{ragged2e}
+\usepackage{etoolbox}
+\AtBeginDocument{\justifying}
+\apptocmd{\maketitle}{\justifying}{}{}
+\let\oldraggedright\raggedright
+\renewcommand{\raggedright}{\justifying}
+```
+- `apa7` `man` mode calls `\raggedright` in `\AtBeginDocument` and `\maketitle`
+- The `\renewcommand` ensures no code path can re-enable ragged-right
+
+**Table column width formula** (CRITICAL — without this, tables overflow page):
+```latex
+% For N-column longtable with @{} at both ends:
+% Each column = (\linewidth - (N-1)*2\tabcolsep) * \real{proportion}
+% Shorthand: subtract (N-1)*2 tabcolseps from linewidth
+
+% 4-column example (3 inter-column gaps):
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+
+% 5-column example (4 inter-column gaps):
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
+  ...@{}}
+```
+- **NEVER** use bare `p{0.25\linewidth}` — this ignores `\tabcolsep` and causes 36pt+ overflow
+- Formula: `(N-1) × 2 = number of \tabcolsep to subtract`
+
+**Bilingual abstract placement** (second language abstract):
+```latex
+\abstract{
+  % Primary language abstract text...
+
+  \newpage
+
+  \begin{center}\textbf{Abstract}\end{center}
+
+  % Second language abstract text...
+}
+```
+- Second language heading **MUST** use `\begin{center}...\end{center}` (not bare `\textbf{}`)
+- `\newpage` before second language abstract ensures it starts on a new page
+
+**URL line breaking**:
+```latex
+\usepackage{xurl}  % Must load AFTER hyperref
+```
+
+**PDF compilation** (mandatory):
+```
+tectonic paper.tex
+```
+- PDF **MUST** be compiled from LaTeX via `tectonic` or `xelatex`
+- HTML-to-PDF is **PROHIBITED** for academic papers
+
+**Verbatim blocks** (e.g., score cards, code):
+```latex
+\usepackage{fancyvrb}
+% Use Verbatim (capital V) with fontsize for wide content:
+\begin{Verbatim}[fontsize=\small]
+...
+\end{Verbatim}
+```
+- If verbatim content exceeds page width, use `fontsize=\small` or `\footnotesize`
+
 ### Chinese LaTeX Compilation Settings
 
 ```latex

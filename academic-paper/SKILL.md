@@ -1,14 +1,14 @@
 ---
 name: academic-paper
-description: "Academic paper writing skill with 12-agent pipeline. v2.3: NEW visualization_agent (publication-quality figures), revision_coach_agent (standalone reviewer comment parser), Socratic convergence criteria + question taxonomy, revision tracking template, citation format conversion, Quick Mode Selection Guide. Supports IMRaD, literature review, theoretical, case study, policy brief, and conference paper structures. APA 7.0 (default), Chicago, MLA, IEEE, Vancouver citation formats. Bilingual abstracts (zh-TW + EN). Multi-format output (LaTeX, DOCX, PDF, Markdown). Triggers on: write paper, academic paper, paper outline, write abstract, revise paper, check citations, convert to LaTeX, guide my paper, parse reviews, revision roadmap."
+description: "Academic paper writing skill with 12-agent pipeline. v2.4: LaTeX output formatting hardening — mandatory apa7 class, text justification fix, table column width formula, bilingual abstract centering, standardized font stack, PDF must compile from LaTeX. Supports IMRaD, literature review, theoretical, case study, policy brief, and conference paper structures. APA 7.0 (default), Chicago, MLA, IEEE, Vancouver citation formats. Bilingual abstracts (zh-TW + EN). Multi-format output (LaTeX, DOCX, PDF, Markdown). Triggers on: write paper, academic paper, paper outline, write abstract, revise paper, check citations, convert to LaTeX, guide my paper, parse reviews, revision roadmap."
 metadata:
-  version: "2.3"
+  version: "2.4"
   last_updated: "2026-03-08"
 ---
 
 # Academic Paper — Academic Paper Writing Agent Team
 
-A general-purpose academic paper writing tool — 12-agent pipeline covering all disciplines, with higher education domain as the default reference. v2.3 adds visualization agent (publication-quality figures), revision coach agent (standalone reviewer comment parser), Socratic convergence criteria, revision tracking template, citation format conversion, and Quick Mode Selection Guide.
+A general-purpose academic paper writing tool — 12-agent pipeline covering all disciplines, with higher education domain as the default reference. v2.4 hardens LaTeX output formatting: mandatory `apa7` document class for APA 7.0, text justification override for `man` mode, table column width formula with `\tabcolsep` deduction, bilingual abstract centering, standardized font stack (Times New Roman + Source Han Serif TC VF + Courier New), and PDF compilation via tectonic.
 
 ## Quick Start
 
@@ -490,6 +490,7 @@ academic-paper + academic-paper-reviewer -> Peer review -> revision loop
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.4 | 2026-03-08 | LaTeX output formatting hardening: mandatory `apa7` document class for APA 7.0 output; text justification fix (`ragged2e` + `etoolbox` to override apa7 man mode `\raggedright`); table column width formula (`(\linewidth - N\tabcolsep) * \real{proportion}` — prevents overflow); bilingual abstract centering (`\begin{center}\textbf{...}\end{center}`); font stack standardized (Times New Roman + Source Han Serif TC VF + Courier New); `xurl` for URL line breaking; `fancyvrb` Verbatim with `fontsize` for wide content; PDF must compile from LaTeX via tectonic (no HTML-to-PDF) |
 | 2.3 | 2026-03-08 | NEW visualization_agent (11th: publication-quality figures with matplotlib/ggplot2, APA 7.0, colorblind-safe); NEW revision_coach_agent (12th: standalone reviewer comment parser → Revision Roadmap); Socratic convergence criteria (4 signals: thesis clarity, chapter coherence, evidence mapping, limitation honesty) + question taxonomy (clarifying, probing, structuring, challenging); revision tracking template (4 status types); citation format conversion in formatter_agent (APA 7 ↔ Chicago ↔ MLA ↔ IEEE ↔ Vancouver); Quick Mode Selection Guide; 9th mode: revision-coach |
 | 2.2 | 2025-03-05 | 4-level argument strength scoring with quantified thresholds; plagiarism & retraction screening protocol; F11 Desk-Reject Recovery + F12 Conference-to-Journal Conversion failure paths; Plan -> Full mode conversion protocol; cross-skill reference to `shared/handoff_schemas.md` |
 | 2.1 | 2026-03 | Added CRediT authorship guide, funding statement guide, 2 new templates (credit_statement_template, funding_statement_template); enhanced intake_agent with co-author + funding questions (Step 9-10); enhanced formatter_agent with CRediT + funding quality checks |

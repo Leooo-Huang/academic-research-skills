@@ -106,6 +106,99 @@ writing tools. All content was reviewed and verified by the author(s).
 \end{document}
 ```
 
+## APA 7.0 Template (`apa7` Class) — Preferred for APA Output
+
+When APA 7.0 format is requested, use the `apa7` document class instead of `article`. This ensures correct running heads, title page layout, and heading levels.
+
+```latex
+\documentclass[man,12pt,natbib]{apa7}
+
+% === Fonts (XeTeX) ===
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage{xeCJK}
+\setCJKmainfont{Source Han Serif TC VF}
+\setmonofont{Courier New}
+
+% === Additional packages ===
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=blue, breaklinks=true}
+\usepackage{xurl}  % URL line breaking (after hyperref)
+
+% === Table column types ===
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% === Justify text (CRITICAL — apa7 man mode defaults to raggedright) ===
+\usepackage{ragged2e}
+\usepackage{etoolbox}
+\AtBeginDocument{\justifying}
+\apptocmd{\maketitle}{\justifying}{}{}
+\let\oldraggedright\raggedright
+\renewcommand{\raggedright}{\justifying}
+
+% === Pandoc compatibility ===
+\newcounter{none}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% === Metadata ===
+\title{Paper Title}
+\shorttitle{Short Title for Running Head}
+\author{Author Name}
+\affiliation{Institution}
+\authornote{Author note text.}
+
+% === Abstract (primary language) ===
+\abstract{
+  Primary language abstract text...
+
+  \newpage
+
+  \begin{center}\textbf{Second Language Abstract Title}\end{center}
+
+  Second language abstract text...
+}
+
+\keywords{keyword1, keyword2, keyword3}
+
+\begin{document}
+\maketitle
+
+% Body sections here...
+
+\end{document}
+```
+
+### Key Differences: `apa7` vs `article`
+
+| Feature | `apa7` class | `article` class |
+|---------|-------------|-----------------|
+| Running head | Automatic (`\shorttitle`) | Manual (`fancyhdr`) |
+| Title page | Built-in (`\maketitle`) | Manual (`titlepage`) |
+| Abstract | `\abstract{}` in preamble | `\begin{abstract}` in body |
+| Heading levels | APA 5-level automatic | Manual formatting |
+| Double spacing | Automatic in `man` mode | Requires `\doublespacing` |
+| Text alignment | **Ragged-right (must override!)** | Justified by default |
+
+### Table Column Width Formula (Mandatory)
+
+**NEVER** use bare `p{0.25\linewidth}` in longtable — this ignores inter-column padding and causes overflow.
+
+**Correct formula**: `p{(\linewidth - N\tabcolsep) * \real{proportion}}`
+
+Where N = `(number_of_columns - 1) × 2`
+
+| Columns | N (tabcolseps) | Example |
+|---------|---------------|---------|
+| 3 | 4 | `(\linewidth - 4\tabcolsep) * \real{0.3333}` |
+| 4 | 6 | `(\linewidth - 6\tabcolsep) * \real{0.2500}` |
+| 5 | 8 | `(\linewidth - 8\tabcolsep) * \real{0.2000}` |
+
 ## BibTeX Entry Formats
 
 ### Journal Article
