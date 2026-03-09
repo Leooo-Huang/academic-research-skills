@@ -18,6 +18,7 @@ Complete artifacts from a real 10-stage academic pipeline run, demonstrating the
 | [integrity_report_stage2.5.pdf](integrity_report_stage2.5.pdf) | Pre-Review (Stage 2.5) | FAIL — found 15 fabricated refs + 3 statistical errors |
 | [integrity_reverification_stage2.5.pdf](integrity_reverification_stage2.5.pdf) | Re-verification (Stage 2.5) | PASS — all 22 issues fixed |
 | [integrity_report_stage4.5.pdf](integrity_report_stage4.5.pdf) | Post-Revision (Stage 4.5) | PASS — zero regressions, 3 new refs verified |
+| [post_publication_audit_2026-03-09.pdf](post_publication_audit_2026-03-09.pdf) | Post-Publication Audit | 21/68 refs corrected — manual WebSearch stress test |
 
 ## Peer Review Reports
 
@@ -48,4 +49,9 @@ Stage 4: Final Revision
 Stage 4.5: Final Integrity Verification ← MANDATORY, confirmed 0 regressions
 Stage 5: Finalization (LaTeX → PDF, bilingual)
 Stage 6: Process Summary
+Post-Publication: Manual WebSearch audit of all 68 refs → 21 issues found & fixed
 ```
+
+## Post-Publication Audit (2026-03-09)
+
+After the pipeline completed, a manual WebSearch audit of all 68 references revealed 21 issues (31%) that survived three rounds of automated integrity checking. This stress test led to the integrity verification agent v2.0 overhaul (Anti-Hallucination Mandate, gray-zone elimination, known hallucination pattern library). See [post_publication_audit_2026-03-09.pdf](post_publication_audit_2026-03-09.pdf) for the full report.
