@@ -1,573 +1,238 @@
 # Academic Research Skills for Claude Code
 
-[![Version](https://img.shields.io/badge/version-v3.0-blue)](https://github.com/Leooo-Huang/academic-research-skills/releases/tag/v3.0)
+[![Version](https://img.shields.io/badge/version-v3.0-blue)](https://github.com/Leooo-Huang/academic-research-skills)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](https://creativecommons.org/licenses/by-nc/4.0/)
 
 **One command. 50-100 verified papers. Zero hallucinated citations. Full paper in hours, not weeks.**
 
-一条命令。50-100 篇验证论文。零幻觉引用。几小时完成从文献发现到可投稿论文的全流程。
-
-A comprehensive suite of Claude Code skills that automates the entire academic research pipeline — from paper discovery to publication-ready manuscripts with peer review.
-
-一套完整的 Claude Code 技能，自动化学术研究全流程——从论文发现、深度分析、论文写作到同行评审。
+一条命令。50-100 篇验证论文。零幻觉引用。几小时内完成从文献发现到可投稿论文的全流程。
 
 ---
 
-## Features
+## What is this / 这是什么
 
-- **Discovery** — 4-phase paper discovery: community intelligence (X/Twitter/Reddit/GitHub/HuggingFace) + Semantic Scholar API (200-500 candidates) + arXiv verification + citation graph expansion = **50-100 verified papers**. No mandatory API key.
-- **Deep Research** — 13-agent research team with Socratic guided mode + systematic review / PRISMA + SCR Loop
-- **Academic Paper** — 12-agent paper writing with LaTeX output hardening, visualization, revision coaching, and citation conversion
-- **Academic Paper Reviewer** — Multi-perspective peer review with 0-100 quality rubrics (EIC + 3 dynamic reviewers + Devil's Advocate)
-- **Academic Pipeline** — Full 11-stage pipeline orchestrator with adaptive checkpoints, claim verification, and material passport
+A skill suite for [Claude Code](https://claude.ai/code) that automates the full academic research pipeline: **discover papers → deep analysis → write paper → peer review → revise → publish**.
 
-### Full Pipeline
+一套 Claude Code 技能，自动化学术研究全流程：**论文发现 → 深度分析 → 论文写作 → 同行评审 → 修订 → 发表**。
 
 ```
-Discover (50-100 papers) → Research → Write → Integrity Check → Review (5-person) → Socratic Coaching
-  → Revise → Re-Review → Re-Revise → Final Integrity Check → Finalize
-  → Process Summary (with Collaboration Quality Evaluation)
-```
-
-**Key Features:**
-1. **Stage 0 DISCOVERY**: 50-100 verified papers from Semantic Scholar API + arXiv + community intelligence — zero hallucinated citations
-2. Adaptive checkpoints (FULL / SLIM / MANDATORY) after every stage
-3. Pre-review integrity verification — 100% reference, data, and claim validation (Phase A-E)
-4. Two-stage review with Devil's Advocate + 0-100 quality rubrics
-5. Socratic revision coaching with SCR Loop (State-Challenge-Reflect, user-togglable) between review and revision stages
-6. Final integrity verification before publication
-7. Output: MD + DOCX + LaTeX (APA 7.0 `apa7` class / IEEE / Chicago) → PDF via tectonic
-8. Post-pipeline process summary with 6-dimension collaboration quality scoring (1–100)
-9. Material passport for mid-entry provenance tracking
-10. Cross-skill mode advisor (14 scenarios + user archetypes)
-
----
-
-## Showcase: Real Pipeline Output
-
-See the complete artifacts from a real 10-stage pipeline run — including **peer review reports, integrity verification reports, and the final paper**:
-
-**[Browse all pipeline artifacts →](examples/showcase/)**
-
-| Artifact | Description |
-|----------|-------------|
-| [Final Paper (EN)](examples/showcase/full_paper_apa7.pdf) | APA 7.0 formatted, LaTeX-compiled |
-| [Final Paper (ZH)](examples/showcase/full_paper_zh_apa7.pdf) | Chinese version, APA 7.0 |
-| [Integrity Report — Pre-Review](examples/showcase/integrity_report_stage2.5.pdf) | Stage 2.5: caught 15 fabricated refs + 3 statistical errors |
-| [Integrity Report — Final](examples/showcase/integrity_report_stage4.5.pdf) | Stage 4.5: zero regressions confirmed |
-| [Peer Review Round 1](examples/showcase/stage3_review_report.pdf) | EIC + 3 Reviewers + Devil's Advocate |
-| [Re-Review](examples/showcase/stage3prime_rereview_report.pdf) | Verification after revisions |
-| [Peer Review Round 2](examples/showcase/stage3_review_report_r2.pdf) | Follow-up review |
-| [Response to Reviewers](examples/showcase/response_to_reviewers_r2.pdf) | Point-by-point author response |
-| [Post-Publication Audit Report](examples/showcase/post_publication_audit_2026-03-09.md) | Independent full-reference audit: found 21/68 issues missed by 3 rounds of integrity checks |
-
----
-
-## Performance Notes
-
-> **Recommended model: Claude Opus 4.6** with **Max plan** (or equivalent extended-thinking configuration).
->
-> The full academic pipeline (10 stages) consumes a **large amount of tokens** — a single end-to-end run can exceed 200K input + 100K output tokens depending on paper length and revision rounds. Budget accordingly.
->
-> Individual skills (e.g., `deep-research` alone, or `academic-paper-reviewer` alone) consume significantly less.
-
-### Recommended Settings
-
-For the best experience with these skills, enable the following Claude Code features:
-
-| Setting | What it does | How to enable | Docs |
-|---------|-------------|---------------|------|
-| **Agent Team** | Spawns subagents for parallel research, writing, and review — critical for multi-agent pipelines | Set `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` (research preview) | [Agent Teams](https://code.claude.com/docs/en/agent-teams) |
-| **Ralph Loop** | Keeps the session alive during long-running pipeline stages so Claude can work autonomously without timing out | Use `/ralph-loop` to activate | [Ralph Loop](https://claude.com/plugins/ralph-loop) |
-| **Skip Permissions** | Bypasses per-tool confirmation prompts, enabling uninterrupted autonomous execution across all pipeline stages | Launch with `claude --dangerously-skip-permissions` | [Permissions](https://docs.anthropic.com/en/docs/claude-code/cli-reference) · [Advanced Usage](https://docs.anthropic.com/en/docs/claude-code/advanced) |
-
-> **⚠️ Skip Permissions**: This flag disables all tool-use confirmation dialogs. Use at your own discretion — it is convenient for trusted, long-running pipelines but removes the safety net of manual approval. Only enable this in environments where you are comfortable with Claude executing file reads, writes, and shell commands without asking first.
-
----
-
-## Prerequisites
-
-### Install Claude Code
-
-**Recommended: Native installer** (no Node.js required, auto-updates):
-
-```bash
-# macOS / Linux
-curl -fsSL https://claude.ai/install.sh | bash
-
-# Windows (PowerShell)
-irm https://claude.ai/install.ps1 | iex
-```
-
-<details>
-<summary>Alternative: npm install (deprecated)</summary>
-
-Requires Node.js 18+.
-
-```bash
-npm install -g @anthropic-ai/claude-code
-```
-
-</details>
-
-### Set Up API Key
-
-You need an Anthropic API key. Get one at https://console.anthropic.com/
-
-```bash
-# Claude Code will prompt for your API key on first run
-claude
-```
-
-Or set it as an environment variable:
-
-```bash
-export ANTHROPIC_API_KEY=sk-ant-xxxxx
+You: "Find papers on robot motion retargeting"
+Claude: → discovers 50-100 verified papers from Semantic Scholar + arXiv
+        → analyzes gaps, extracts trends
+        → writes publication-ready manuscript with proper citations
+        → simulates 5-person peer review
+        → revises based on feedback
+        → outputs LaTeX/PDF/DOCX
 ```
 
 ---
 
-## Installation
-
-### Method 1: As Project Skills (Recommended)
-
-Clone this repo into your project's `.claude/skills/` directory:
+## Quick Start / 快速开始
 
 ```bash
-# Navigate to your project root
-cd /path/to/your/project
+# Install (安装)
+git clone https://github.com/Leooo-Huang/academic-research-skills.git ~/.claude/skills/academic-research-skills
 
-# Create skills directory if it doesn't exist
-mkdir -p .claude/skills
+# Optional: install Python deps for faster paper discovery (可选：加速论文发现)
+pip install requests arxiv huggingface-hub
 
-# Clone the skills
-git clone https://github.com/Leooo-Huang/academic-research-skills.git .claude/skills/academic-research-skills
+# Start Claude Code, then say:
+# 开始使用，对 Claude 说：
 ```
 
-Then copy the `.claude/CLAUDE.md` content into your project's `.claude/CLAUDE.md` (merge with existing if you have one).
+```
+"Find papers on [your topic]"                    → Paper discovery (论文发现)
+"I want to write a research paper on [topic]"    → Full pipeline (完整流水线)
+"Research the impact of AI on [field]"           → Deep research (深度研究)
+"Review this paper"                              → Peer review (同行评审)
+```
 
-> **Global installation:** To make skills available across all your projects, install to `~/.claude/skills/` instead:
-> ```bash
-> mkdir -p ~/.claude/skills
-> git clone https://github.com/Leooo-Huang/academic-research-skills.git ~/.claude/skills/academic-research-skills
-> ```
+---
 
-### Method 2: As a Standalone Project
+## Pipeline / 流水线
+
+```
+Stage 0        Stage 1         Stage 2       Stage 2.5        Stage 3
+DISCOVER  ──→  RESEARCH  ──→   WRITE   ──→  INTEGRITY  ──→   REVIEW
+50-100 papers  13-agent team   12 agents     100% verify      5 reviewers
+                                             zero tolerance   + Devil's Advocate
+     │
+     ↓
+Stage 4        Stage 3'        Stage 4'      Stage 4.5        Stage 5
+REVISE   ──→   RE-REVIEW ──→  RE-REVISE ──→ FINAL CHECK ──→  FINALIZE
+address        verify fixes    if needed     zero issues      LaTeX → PDF
+feedback                                     required
+```
+
+---
+
+## 5 Skills / 五个技能
+
+### Discovery v2.1 — 论文发现
+
+Python-first API engine. Finds 50-100 verified papers with zero hallucinated citations.
+
+| Phase | What / 做什么 | How / 方法 |
+|-------|-------------|-----------|
+| A: Community Intelligence | Trending keywords + pain points / 趋势关键词 + 痛点 | last30days skill or WebSearch |
+| B: Systematic Search | 200-500 candidates / 候选论文 | Python `research_radar.py` → S2 + arXiv + HF + GitHub |
+| C: Verification | Verify each paper exists / 验证每篇论文 | Python batch verification on arXiv |
+| D: Citation Expansion | Expand via citation graph / 引用图谱扩展 | Python → S2 references + citations API |
+
+**Scoring**: PIS (Paper Importance Score) — citation velocity + venue prestige + community signal + recency decay (lambda=0.04). Age-based phased weights: new papers lean on relevance, mature papers lean on citations.
+
+评分系统：PIS（论文重要性评分）— 引用速度 + 发表场所声望 + 社区信号 + 指数时效衰减。按论文年龄分阶段加权。
+
+### Deep Research v2.4 — 深度研究
+
+13-agent research team. 7 modes: full / quick / systematic-review / socratic / fact-check / lit-review / paper-review.
+
+13 个 AI agent 组成的研究团队。支持 7 种模式。
+
+| Key Agents | Role |
+|-----------|------|
+| Research Question Agent | FINER-scored question formulation |
+| Bibliography Agent | Systematic literature search (VERIFY MODE with discovery corpus) |
+| Synthesis Agent | Cross-source integration + gap analysis (uses community pain points) |
+| Socratic Mentor | Guided dialogue with SCR (State-Challenge-Reflect) protocol |
+| Risk of Bias Agent | RoB 2 + ROBINS-I assessment |
+| Meta-Analysis Agent | Effect sizes, forest plots, GRADE |
+
+### Academic Paper v2.4 — 论文写作
+
+12-agent paper writing pipeline. Outputs: Markdown + DOCX + LaTeX (APA 7.0 / IEEE / Chicago) → PDF via tectonic.
+
+12 个 agent 的论文写作流水线。支持 APA 7.0 / IEEE / Chicago 格式。
+
+### Academic Paper Reviewer v1.4 — 论文评审
+
+5-person simulated peer review: Editor-in-Chief + 3 domain reviewers + Devil's Advocate. 0-100 quality rubrics.
+
+模拟 5 人同行评审：主编 + 3 位领域审稿人 + 魔鬼代言人。0-100 质量评分。
+
+### Academic Pipeline v2.8 — 流水线调度
+
+11-stage orchestrator with integrity verification, two-stage review, and collaboration quality evaluation.
+
+11 阶段调度器，含完整性验证、两轮评审、协作质量评估。
+
+---
+
+## Installation Methods / 安装方式
+
+### Method 1: Global Skills (Recommended / 推荐)
 
 ```bash
-# Clone the repo
-git clone https://github.com/Leooo-Huang/academic-research-skills.git
-
-# Navigate to the project
-cd academic-research-skills
-
-# Start Claude Code
-claude
+mkdir -p ~/.claude/skills
+git clone https://github.com/Leooo-Huang/academic-research-skills.git ~/.claude/skills/academic-research-skills
 ```
 
-<details>
-<summary><strong>Don't have Git?</strong> Download as ZIP instead</summary>
+Works across all your projects. 所有项目通用。
 
-1. Go to https://github.com/Imbad0202/academic-research-skills
-2. Click the green **Code** button → **Download ZIP**
-3. Extract the ZIP to your desired location
-4. For Method 1: move the extracted folder to `.claude/skills/academic-research-skills` inside your project
-5. For standalone use: open a terminal in the extracted folder and run `claude`
+### Method 2: Project Skills
 
-</details>
-
-### Method 3: Claude Cowork (Desktop)
-
-Use these skills in [Claude Cowork](https://claude.com/product/cowork) — Claude Desktop's agentic workspace for knowledge work.
-
-**Option A: Folder Access (Quickest)**
-
-1. Clone this repo to a local folder:
-   ```bash
-   git clone https://github.com/Leooo-Huang/academic-research-skills.git ~/academic-research-skills
-   ```
-2. Open Claude Desktop → click **Cowork** tab (top bar)
-3. Select the cloned `academic-research-skills` folder as the working directory
-4. Claude will auto-detect the skills from `SKILL.md` files and load them as needed
-
-**Option B: As Project Skills**
-
-If you already have a project folder in Cowork:
 ```bash
 cd /path/to/your/project
 mkdir -p .claude/skills
 git clone https://github.com/Leooo-Huang/academic-research-skills.git .claude/skills/academic-research-skills
 ```
 
-Skills will auto-load when relevant to your conversation — e.g., saying "help me write a paper" triggers `academic-paper`.
+### Method 3: Claude Desktop (Cowork)
 
-**Requirements:**
-- Claude Desktop (latest version) with Cowork enabled
-- Paid plan (Pro, Max, Team, or Enterprise)
+Clone → open folder in Cowork tab → skills auto-load.
 
 ### Method 4: Upload to claude.ai
 
-You can load these skills via claude.ai's Project feature without installing Claude Code.
-
-**Steps:**
-
-1. Download all 5 `SKILL.md` files from this repo:
-   - `discovery/SKILL.md`
-   - `deep-research/SKILL.md`
-   - `academic-paper/SKILL.md`
-   - `academic-paper-reviewer/SKILL.md`
-   - `academic-pipeline/SKILL.md`
-
-2. Sign in to [claude.ai](https://claude.ai)
-
-3. Create a new Project:
-   - Click **Projects** → **Create Project** in the sidebar
-   - Name it "Academic Research" (or any name you prefer)
-
-4. Upload SKILL.md files:
-   - Open the Project → click **Project Knowledge** (right panel)
-   - Click **Add Content** → **Upload Files**
-   - Upload all 4 `SKILL.md` files
-
-5. (Optional) Upload reference and template files for better results:
-   - Files under `deep-research/references/` (APA guide, methodology templates, etc.)
-   - Files under `academic-paper/references/` (citation formats, writing style, etc.)
-   - Files under `academic-paper/templates/` (paper structure templates)
-
-6. Start chatting: Open a new conversation in the Project and say "Guide my research on X" or "Help me write a paper"
-
-**claude.ai Limitations:**
-- Project Knowledge file size limit: 200KB per file
-- `version` and `last_updated` in SKILL.md YAML frontmatter must be under `metadata:`, otherwise upload will fail
-- claude.ai does not support parallel multi-agent execution; results may not be as comprehensive as Claude Code
-- Recommended: upload at least 4 SKILL.md files + core references for best results
+Upload the 5 `SKILL.md` files to a claude.ai Project as knowledge files.
 
 ---
 
-## Usage
+## Optional Dependencies / 可选依赖
 
-### Quick Start
+| Dependency | Purpose | Required? |
+|-----------|---------|-----------|
+| Python 3.10+ | Discovery skill API engine | Recommended (falls back to WebFetch without it) |
+| `requests` | HTTP client for S2/arXiv API | `pip install requests` |
+| `arxiv` | arXiv API client | `pip install arxiv` |
+| `huggingface-hub` | HuggingFace trending papers | `pip install huggingface-hub` |
+| `S2_API_KEY` | Higher Semantic Scholar rate limit | Free at semanticscholar.org/product/api |
+| `OPENAI_API_KEY` | last30days skill (Reddit/X/YouTube) | Optional, for Phase A community intelligence |
 
-```
-# Start a full research pipeline
-You: "I want to write a research paper on AI's impact on higher education QA"
+**Without Python**: Discovery skill falls back to WebFetch (same results, slower, may hit rate limits). All other skills work without any dependencies.
 
-# Start with Socratic guidance
-You: "Guide my research on AI in educational evaluation"
-
-# Write a paper with guided planning
-You: "Guide me through writing a paper on demographic decline"
-
-# Review an existing paper
-You: "Review this paper" (then provide the paper)
-
-# Check pipeline status
-You: "status"
-```
-
-### Individual Skills
-
-#### Deep Research (7 modes)
-```
-"Research the impact of AI on higher education"       → full mode
-"Give me a quick brief on X"                          → quick mode
-"Do a systematic review on X with PRISMA"             → systematic-review mode (new)
-"Guide my research on X"                              → socratic mode (guided)
-"Fact-check these claims"                             → fact-check mode
-"Do a literature review on X"                         → lit-review mode
-"Review this paper's research quality"                → review mode
-```
-
-#### Academic Paper (9 modes)
-```
-"Write a paper on X"                                  → full mode
-"Guide me through writing a paper"                    → plan mode (guided)
-"I have a draft, here are reviewer comments"          → revision mode
-"Parse these reviewer comments into a roadmap"        → revision-coach mode (new)
-"Convert to LaTeX" / "Convert citations to IEEE"      → format-convert mode
-"Check citations"                                     → citation-check mode
-"Write a bilingual abstract"                          → bilingual-abstract mode
-"Polish my writing style"                             → writing-polish mode
-"Write the full paper autonomously"                   → full-auto mode
-```
-
-#### Academic Paper Reviewer (5 modes)
-```
-"Review this paper"                                   → full mode (EIC + R1/R2/R3 + Devil's Advocate)
-"Quick assessment of this paper"                      → quick mode
-"Guide me to improve this paper"                      → guided mode
-"Check the methodology"                               → methodology-focus mode
-"Verify the revisions"                                → re-review mode
-```
-
-#### Academic Pipeline (Orchestrator)
-```
-"I want to write a complete research paper"           → full pipeline from Stage 1
-"I already have a paper, review it"                   → mid-entry at Stage 2.5 (integrity first)
-"I received reviewer comments"                        → mid-entry at Stage 4
-```
-> Pipeline ends with **Stage 6: Process Summary** — auto-generates a paper creation process record with 6-dimension Collaboration Quality Evaluation (1–100 scoring).
-
-### Supported Languages
-
-- **Traditional Chinese** (繁體中文) — default when user writes in Chinese
-- **English** — default when user writes in English
-- Bilingual abstracts (Chinese + English) for academic papers
-
-> **Using a different language?** Socratic mode (deep-research) and Plan mode (academic-paper) use **intent-based activation** — they detect the meaning of your request, not specific keywords. This means they work in **any language** without modification.
->
-> However, the general `Trigger Keywords` section (which determines whether the skill is activated at all) still lists English and Traditional Chinese keywords. If you find the skill isn't activating reliably in your language, you can add your language's keywords to the `### Trigger Keywords` section in each `SKILL.md` file to improve matching confidence.
-
-### Supported Citation Formats
-
-- APA 7.0 (default, including Chinese citation rules)
-- Chicago (Notes & Author-Date)
-- MLA
-- IEEE
-- Vancouver
-
-### Supported Paper Structures
-
-- IMRaD (empirical research)
-- Thematic Literature Review
-- Theoretical Analysis
-- Case Study
-- Policy Brief
-- Conference Paper
+无 Python 环境时：Discovery 自动降级为 WebFetch 模式。其他技能无需任何依赖。
 
 ---
 
-## Skill Details
+## Recommended Settings / 推荐设置
 
-### Discovery (v2.1) — Python-first API Access
+| Setting | Purpose | How |
+|---------|---------|-----|
+| Claude Opus 4.6 | Best results for multi-agent pipelines | Max plan or API |
+| Skip Permissions | Uninterrupted autonomous execution | `claude --dangerously-skip-permissions` |
 
-4-phase pipeline for hallucination-free paper discovery. **Python script handles all API calls** with proper rate limiting and exponential backoff; WebFetch is a fallback when Python is unavailable.
-
-| Phase | What it does | Method |
-|-------|-------------|--------|
-| A: Community Intelligence | Trending keywords, hot papers, pain points | last30days skill (preferred) or WebSearch |
-| B: Systematic Search | 200-500 candidates from S2 + arXiv + HuggingFace + GitHub | Python `research_radar.py --mode search` via Bash |
-| C: Verification | Verify each arXiv paper; discard unresolvable | Python `research_radar.py --mode verify` via Bash |
-| D: Citation Expansion | References + citations for top papers | Python `research_radar.py --mode expand` via Bash |
-
-**Output**: 50-100 verified papers, Schema-2-compliant Bibliography with COMMUNITY_SIGNALS artifact
-
-**Python dependency (recommended):** `pip install requests arxiv huggingface-hub` — enables fast, rate-controlled API access. Without Python, falls back to WebFetch (same results, slower, may hit rate limits).
-
-**Modes:** standard (50-100), recent (30-60), comprehensive (80-100), venue (30-60), pipeline
+> Full pipeline (10 stages) can exceed 200K+ tokens. Individual skills consume significantly less.
 
 ---
 
-### Deep Research (v2.4)
+## Showcase / 成果展示
 
-13-agent pipeline for rigorous academic research:
+See real pipeline output: [examples/showcase/](examples/showcase/)
 
-| Agent | Role |
-|-------|------|
-| Research Question Agent | FINER-scored RQ formulation |
-| Research Architect | Methodology design |
-| Bibliography Agent | Systematic literature search |
-| Source Verification Agent | Evidence grading, predatory journal detection |
-| Synthesis Agent | Cross-source integration |
-| Report Compiler | APA 7.0 report drafting |
-| Editor-in-Chief | Q1 journal editorial review |
-| Devil's Advocate | Assumption challenging (3 checkpoints) |
-| Ethics Review Agent | AI disclosure, attribution integrity |
-| Socratic Mentor | Guided research dialogue with convergence criteria + SCR reflection (togglable) |
-| Risk of Bias Agent | RoB 2 + ROBINS-I assessment, traffic-light output |
-| Meta-Analysis Agent | Effect sizes, heterogeneity, forest plot data, GRADE |
-| Monitoring Agent | Post-pipeline literature monitoring alerts |
-
-**Modes:** full, quick, paper-review, lit-review, fact-check, socratic, **systematic-review** (new)
-
-### Academic Paper (v2.4)
-
-12-agent pipeline for academic paper writing:
-
-| Agent | Role |
-|-------|------|
-| Intake Agent | Configuration interview + handoff detection |
-| Literature Strategist | Search strategy + annotated bibliography |
-| Structure Architect | Paper outline + word allocation |
-| Argument Builder | Thesis + claim-evidence chains |
-| Draft Writer | Section-by-section writing |
-| Citation Compliance | Multi-format citation audit + APA↔Chicago↔MLA↔IEEE↔Vancouver conversion |
-| Abstract Bilingual | EN + Chinese abstracts |
-| Peer Reviewer | 5-dimension review (max 2 rounds) |
-| Formatter | LaTeX/DOCX/PDF output — mandatory `apa7` class, XeCJK bilingual, `ragged2e` justification fix, tectonic compilation |
-| Socratic Mentor | Chapter-by-chapter guided planning with convergence criteria + SCR reflection (togglable) |
-| Visualization Agent | 9 chart types, matplotlib/ggplot2, APA 7.0 standards |
-| Revision Coach Agent | Parses unstructured reviewer comments → Revision Roadmap |
-
-**Modes:** full, plan, revision, citation-check, format-convert, bilingual-abstract, writing-polish, full-auto, **revision-coach** (new)
-
-### Academic Paper Reviewer (v1.4)
-
-7-agent multi-perspective review with **0-100 quality rubrics**:
-
-| Agent | Role |
-|-------|------|
-| Field Analyst | Identifies domain, configures reviewer personas |
-| Editor-in-Chief | Journal fit, novelty, significance |
-| Methodology Reviewer | Research design, statistics, reproducibility |
-| Domain Reviewer | Literature coverage, theoretical framework |
-| Perspective Reviewer | Cross-disciplinary, practical impact |
-| Devil's Advocate Reviewer | Core thesis challenge, logical fallacy detection, strongest counter-argument |
-| Editorial Synthesizer | Consensus analysis, revision roadmap, **rubric-based scoring** |
-
-**Modes:** full, re-review (verification), quick, methodology-focus, guided
-
-**Decision mapping:** ≥80 Accept, 65-79 Minor Revision, 50-64 Major Revision, <50 Reject
-
-### Academic Pipeline (v2.8)
-
-11-stage orchestrator with discovery, integrity verification, two-stage review, Socratic coaching, and collaboration evaluation:
-
-| Stage | Skill | Purpose |
-|-------|-------|---------|
-| **0. DISCOVERY** | **discovery** | **50-100 verified papers from S2 API + arXiv + community signals** |
-| 1. RESEARCH | deep-research | Clarify RQ, find literature (PAPER_CORPUS feeds bibliography_agent VERIFY MODE) |
-| 2. WRITE | academic-paper | Draft the paper |
-| **2.5. INTEGRITY** | **integrity_verification_agent** | **100% reference & data verification (v2.0: anti-hallucination mandate)** |
-| 3. REVIEW | academic-paper-reviewer | 5-person review (EIC + R1/R2/R3 + Devil's Advocate) |
-| → | *Socratic Revision Coaching* | *Guide user through review feedback* |
-| 4. REVISE | academic-paper | Address review comments |
-| 3'. RE-REVIEW | academic-paper-reviewer | Verification review of revisions |
-| → | *Socratic Residual Coaching* | *Guide user through remaining issues (if Major)* |
-| 4'. RE-REVISE | academic-paper | Final revision (if needed) |
-| **4.5. FINAL INTEGRITY** | **integrity_verification_agent** | **100% final verification (zero issues required)** |
-| 5. FINALIZE | academic-paper | Ask format style → MD + DOCX + LaTeX → tectonic → PDF |
-| **6. PROCESS SUMMARY** | **pipeline** | **Paper creation process record + Collaboration Quality Evaluation (1–100)** |
-
-**Pipeline guarantees:**
-- Every stage requires user confirmation checkpoint
-- Integrity verification (Stage 2.5 + 4.5) cannot be skipped
-- Reproducible — standardized process with full audit trail
-- Post-pipeline collaboration evaluation with honest, evidence-based scoring
+| Artifact | Description |
+|----------|-------------|
+| [Final Paper (EN)](examples/showcase/full_paper_apa7.pdf) | APA 7.0 LaTeX-compiled |
+| [Final Paper (ZH)](examples/showcase/full_paper_zh_apa7.pdf) | Chinese version |
+| [Pre-Review Integrity Report](examples/showcase/integrity_report_stage2.5.pdf) | Caught 15 fabricated refs + 3 statistical errors |
+| [Peer Review Round 1](examples/showcase/stage3_review_report.pdf) | EIC + 3 Reviewers + Devil's Advocate |
+| [Post-Publication Audit](examples/showcase/post_publication_audit_2026-03-09.pdf) | Found 21/68 issues missed by 3 rounds of checks |
 
 ---
 
-## License
+## Supported Formats / 支持格式
 
-This work is licensed under [CC-BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
+**Citation**: APA 7.0 (default), Chicago, MLA, IEEE, Vancouver
 
-**You are free to:**
-- Share — copy and redistribute the material
-- Adapt — remix, transform, and build upon the material
+**Paper Structure**: IMRaD, Literature Review, Theoretical Analysis, Case Study, Policy Brief, Conference Paper
 
-**Under the following terms:**
-- **Attribution** — You must give appropriate credit
-- **NonCommercial** — You may not use the material for commercial purposes
+**Output**: Markdown + DOCX + LaTeX → PDF (via tectonic)
 
-**Attribution format:**
+**Languages**: English, Chinese (Simplified). Bilingual abstracts supported.
+
+---
+
+## Project Structure / 项目结构
+
 ```
-Based on Academic Research Skills by Cheng-I Wu
-https://github.com/Imbad0202/academic-research-skills
+academic-research-skills/
+├── discovery/              ← Paper discovery (v2.1, Python-first)
+│   ├── SKILL.md
+│   ├── agents/
+│   ├── scripts/            ← research_radar.py + requirements.txt
+│   ├── references/
+│   └── templates/
+├── deep-research/          ← 13-agent research team (v2.4)
+├── academic-paper/         ← 12-agent paper writing (v2.4)
+├── academic-paper-reviewer/← 7-agent peer review (v1.4)
+├── academic-pipeline/      ← 11-stage orchestrator (v2.8)
+├── shared/                 ← Cross-skill data contracts
+├── examples/showcase/      ← Real pipeline output samples
+├── CONTRIBUTING.md
+└── README.md
 ```
 
 ---
 
-## Author
+## Contributing / 贡献
 
-**Cheng-I Wu** (吳政宜)
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
-## Changelog
+## License / 许可
 
-### v3.0 (2026-03-27) — Discovery v2.1: Python-first API Access
+[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
 
-- **discovery v2.1**: Python script (`research_radar.py`) as primary API engine for Phases B/C/D
-  - Migrated from project-specific script to `discovery/scripts/`; fixed paperId truncation, date logic, missing abstract field
-  - Three modes: `--mode search` (S2 + arXiv + HF + GitHub), `--mode verify` (batch arXiv verification), `--mode expand` (citation graph)
-  - Proper rate limiting with exponential backoff (10s → 30s → 120s on S2 429)
-  - `--output-json` for programmatic consumption by Claude via Bash
-  - Graceful degradation: missing `requests` outputs clean JSON error, skill falls back to WebFetch
-  - WebFetch retained as fallback when Python is unavailable
-  - Added `Bash` to `allowed-tools`
-  - `requirements.txt` for Python dependencies
-- **PIS scoring system**: Multi-dimensional Paper Importance Score with age-based phased weights
-  - Citation velocity (time-adjusted), domain-aware venue scoring, community signal integration, exponential recency decay (lambda=0.04)
-  - New papers (<6mo): relevance 0.65 dominates; mature papers (>18mo): velocity 0.20 dominates
-- **Phase B4 pre-filtering**: Abstract-based quality filter reduces Phase C verification load by ~70%
-- **Phase D temporal triage**: Skip citation expansion for papers < 3 months old (no citations accumulated yet)
-- Added `research-workflow.md` to `academic-pipeline/references/` (6-stage research methodology)
-- Removed `README.zh-TW.md`; added `README.zh-CN.md` (Simplified Chinese)
+Free to share and adapt for non-commercial use with attribution.
 
-### v2.9 (2026-03-26) — Discovery v2.0: Community Intelligence + Semantic Scholar API
-
-- **discovery v2.0** (new skill): Four-phase paper discovery pipeline that scales from 15-30 papers (v1.0) to 50-100 verified papers
-  - Phase A: Community intelligence via WebSearch on X/Twitter, Reddit, GitHub, HuggingFace — extracts trending_keywords, hot_paper_ids, pain_points as COMMUNITY_SIGNALS artifact
-  - Phase B: Semantic Scholar API bulk search via WebFetch (`api.semanticscholar.org/graph/v1/paper/search`, 100/query × 3-4 queries) + arXiv WebSearch for recent papers
-  - Phase C: WebFetch verification on each arXiv abstract page — discard over guess
-  - Phase D: Citation graph expansion via S2 references/citations API for top 10 papers
-  - **No mandatory API key** — free tier (100 req/5min); optional `S2_API_KEY` (free, 1000 req/5min)
-  - COMMUNITY_SIGNALS passed to `synthesis_agent` for gap analysis framing
-- **academic-pipeline v2.8**: Stage 0 upgraded to discovery v2.0; Integration section updated with 50-100 paper targets per mode; COMMUNITY_SIGNALS flow documented
-- **deep-research v2.4**: `synthesis_agent` now uses `community_signals.pain_points` for gap analysis when PAPER_CORPUS includes community signals
-- **shared/handoff_schemas.md**: Schema 2 optional fields extended with `community_signals` and `discovery_phases`
-- Added `CONTRIBUTING.md` for GitHub PR standards
-
-### v2.8 (2026-03-22) — SCR Loop Phase 1: State-Challenge-Reflect
-- **Socratic Mentor Agent** (deep-research + academic-paper): SCR (State-Challenge-Reflect) protocol integration
-  - **Commitment Gates**: Collect user predictions before presenting evidence at each layer/chapter transition
-  - **Certainty-Triggered Contradiction**: Detect high-confidence language ("obviously", "clearly") and introduce counterpoints
-  - **Adaptive Intensity**: Track commitment accuracy, dynamically adjust challenge frequency
-  - **Self-Calibration Signal (S5)**: New convergence signal tracking user's self-calibration growth across dialogue
-  - **SCR Switch**: Users can say "skip the predictions" to disable or "turn predictions back on" to re-enable mid-dialogue; Socratic questioning continues normally
-- `deep-research/references/socratic_questioning_framework.md`: SCR Overlay Protocol mapping SCR phases to Socratic functions
-- Added `CHANGELOG.md`
-
-### v2.7 (2026-03-09) — Integrity Verification v2.0: Anti-Hallucination Overhaul
-- **integrity_verification_agent v2.0**: Anti-Hallucination Mandate (no AI memory verification), eliminated gray-zone classifications (VERIFIED/NOT_FOUND/MISMATCH only), mandatory WebSearch audit trail for every reference, Stage 4.5 fresh independent verification, Gray-Zone Prevention Rule
-- **Known Hallucination Patterns**: 5-type taxonomy (TF/PAC/IH/PH/SH) from GPTZero × NeurIPS 2025 study, 5 compound deception patterns, real-world case study, literature statistics
-- **Post-publication audit**: Full WebSearch verification of all 68 references found 21 issues (31% error rate) that passed 3 rounds of integrity checks — proving the necessity of external verification
-- **Paper corrections**: Removed 4 fabricated references, fixed 6 author errors, corrected 7 metadata errors, fixed 2 format issues
-
-### v2.6.2 (2026-03-09) — Intent-Based Mode Activation
-- **deep-research**: Socratic mode now uses **intent-based activation** instead of keyword matching. Works in any language — detects meaning (e.g., "user wants guided thinking") rather than matching specific strings.
-- **academic-paper**: Plan mode now uses **intent-based activation**. Detects intent signals like "user is uncertain how to start" or "user wants step-by-step guidance" in any language.
-- Both modes now have a **default rule**: when intent is ambiguous, prefer `socratic`/`plan` over `full` — safer to guide first.
-- Two-layer architecture: Layer 1 (skill activation) uses bilingual keywords for matching confidence; Layer 2 (mode routing) uses language-agnostic intent signals.
-
-### v2.6.1 (2026-03-09) — Bilingual Trigger Keywords
-- **deep-research**: Added Traditional Chinese trigger keywords for general activation and Socratic mode.
-- **academic-paper**: Added Traditional Chinese trigger keywords and Plan Mode trigger section.
-- Both mode selection guides now include bilingual examples and Chinese-specific misselection scenarios.
-
-### v2.6 / v2.4 / v1.4 (2026-03-08) — 15+ Improvements
-- **deep-research v2.3**: New systematic-review / PRISMA mode (7th); 3 new agents (risk_of_bias, meta_analysis, monitoring); PRISMA protocol/report templates; Socratic convergence criteria (4 signals + auto-end); Quick Mode Selection Guide
-- **academic-paper v2.4**: 2 new agents (visualization, revision_coach); revision tracking template with 4 status types; citation format conversion (APA↔Chicago↔MLA↔IEEE↔Vancouver); statistical visualization standards; Socratic convergence criteria; revision recovery example; **LaTeX output hardening** — mandatory `apa7` document class, text justification fix (`ragged2e` + `etoolbox`), table column width formula, bilingual abstract centering, standardized font stack (Times New Roman + Source Han Serif TC VF + Courier New), PDF via tectonic only
-- **academic-paper-reviewer v1.4**: Quality rubrics with 0-100 scoring and behavioral indicators; decision mapping (≥80 Accept, 65-79 Minor, 50-64 Major, <50 Reject); Quick Mode Selection Guide
-- **academic-pipeline v2.6**: Adaptive checkpoint system (FULL/SLIM/MANDATORY); Phase E Claim Verification in integrity checks; Material Passport for mid-entry provenance; cross-skill mode advisor (14 scenarios); team collaboration protocol; enhanced handoff schemas (9 schemas); integrity failure recovery example
-
-### v2.4 / v1.3 (2026-03-08)
-- **academic-pipeline v2.4**: New Stage 6 PROCESS SUMMARY — auto-generates structured paper creation process record (MD → LaTeX → PDF, bilingual); mandatory final chapter: **Collaboration Quality Evaluation** with 6 dimensions scored 1–100 (Direction Setting, Intellectual Contribution, Quality Gatekeeping, Iteration Discipline, Delegation Efficiency, Meta-Learning), honest feedback, and improvement recommendations; pipeline expanded from 9 to 10 stages
-
-### v2.3 / v1.3 (2026-03-08)
-- **academic-pipeline v2.3**: Stage 5 FINALIZE now prompts for formatting style (APA 7.0 / Chicago / IEEE); PDF must compile from LaTeX via `tectonic` (no HTML-to-PDF); APA 7.0 uses `apa7` document class (`man` mode) with XeCJK for bilingual CJK support; font stack: Times New Roman + Source Han Serif TC VF + Courier New
-
-### v2.2 / v1.3 (2025-03-05)
-- **Cross-Agent Quality Alignment**: unified definitions (peer-reviewed, currency rule, CRITICAL severity, source tier) across all agents
-- **deep-research v2.2**: synthesis anti-patterns, Socratic auto-end conditions, DOI+WebSearch verification, enhanced ethics integrity check, mode transition matrix
-- **academic-paper v2.2**: 4-level argument scoring, plagiarism screening, 2 new failure paths (F11 Desk-Reject Recovery, F12 Conference-to-Journal), Plan→Full mode conversion
-- **academic-paper-reviewer v1.3**: DA vs R3 role boundaries, CRITICAL finding criteria, consensus classification (4/3/SPLIT/DA-CRITICAL), confidence score weighting, Asian & Regional Journals reference
-- **academic-pipeline v2.2**: checkpoint confirmation semantics, mode switching matrix, failure fallback matrix, state ownership protocol, material version control
-
-### v2.0.1 (2026-03)
-- **Simplify 4 SKILL.md** (-371 lines, -16.5%): remove cross-skill duplication, inline templates → file references, redundant routing tables, duplicate mode selection sections
-- Fix revision loop cap contradiction between academic-paper and academic-pipeline
-
-### v2.0 (2026-02)
-- **academic-pipeline v2.0**: 5→9 stages, mandatory integrity verification, two-stage review, Socratic revision coaching, reproducibility guarantees
-- **academic-paper-reviewer v1.1**: +Devil's Advocate Reviewer (7th agent), +re-review mode (verification), +post-review Socratic coaching
-- New agent: `integrity_verification_agent` — 100% reference/data verification with audit trail
-- New agent: `devils_advocate_reviewer_agent` — 8-dimension thesis challenger
-- Output order: MD + DOCX → ask LaTeX → confirm → PDF
-
-### v1.0 (2026-02)
-- Initial release
-- deep-research v2.0 (10 agents, 6 modes including socratic)
-- academic-paper v2.0 (10 agents, 8 modes including plan)
-- academic-paper-reviewer v1.0 (6 agents, 4 modes including guided)
-- academic-pipeline v1.0 (orchestrator)
+Based on [academic-research-skills](https://github.com/Imbad0202/academic-research-skills) by Cheng-I Wu.
