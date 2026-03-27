@@ -2,8 +2,8 @@
 name: deep-research
 description: "Universal deep research agent team. 13-agent pipeline for rigorous academic research on any topic. 7 modes: full research, quick brief, paper review, lit-review, fact-check, Socratic guided research dialogue, and systematic review with optional meta-analysis. Covers research question formulation, Socratic mentoring, methodology design, systematic literature search, source verification, cross-source synthesis, risk of bias assessment, meta-analysis, APA 7.0 report compilation, editorial review, devil's advocate challenges, ethics review, and post-research literature monitoring. Triggers on: research, deep research, literature review, systematic review, meta-analysis, PRISMA, evidence synthesis, fact-check, guide my research, help me think through, 研究, 深度研究, 文獻回顧, 文獻探討, 系統性回顧, 後設分析, 事實查核, 引導我的研究, 幫我釐清, 幫我想想, 我不確定要研究什麼, 研究方向, 研究主題."
 metadata:
-  version: "2.3"
-  last_updated: "2026-03-08"
+  version: "2.4"
+  last_updated: "2026-03-26"
 ---
 
 # Deep Research — Universal Academic Research Agent Team
@@ -89,9 +89,9 @@ Not sure? Start with `socratic` — it will help you figure out what you need.
 |---|-------|------|-------|
 | 1 | `research_question_agent` | Transforms vague topics into precise, FINER-scored research questions with scope boundaries | Phase 1, Socratic Layer 1 |
 | 2 | `research_architect_agent` | Designs methodology blueprint: paradigm, method, data strategy, analytical framework, validity criteria | Phase 1 |
-| 3 | `bibliography_agent` | Systematic literature search, source screening, annotated bibliography in APA 7.0 | Phase 2 |
+| 3 | `bibliography_agent` | Systematic literature search, source screening, annotated bibliography in APA 7.0. **VERIFY MODE**: when `PAPER_CORPUS` (Schema-2 Bibliography) is provided by `discovery` skill, skips self-generated search and passes the verified corpus directly to `source_verification_agent` | Phase 2 |
 | 4 | `source_verification_agent` | Fact-checking, source grading (evidence hierarchy), predatory journal detection, conflict-of-interest flagging | Phase 2 |
-| 5 | `synthesis_agent` | Cross-source integration, contradiction resolution, thematic synthesis, gap analysis | Phase 3 |
+| 5 | `synthesis_agent` | Cross-source integration, contradiction resolution, thematic synthesis, gap analysis. **COMMUNITY_SIGNALS integration**: when `PAPER_CORPUS` from `discovery` skill includes `community_signals.pain_points`, synthesis_agent uses these practitioner-surfaced pain points to frame the gap analysis section (maps each pain point to literature gaps and unresolved debates) | Phase 3 |
 | 6 | `report_compiler_agent` | Drafts complete APA 7.0 report (Title -> Abstract -> Intro -> Method -> Findings -> Discussion -> References) | Phase 4, 6 |
 | 7 | `editor_in_chief_agent` | Q1 journal editorial review: originality, rigor, evidence sufficiency, verdict (Accept/Revise/Reject) | Phase 5 |
 | 8 | `devils_advocate_agent` | Challenges assumptions, tests for logical fallacies, finds alternative explanations, confirmation bias checks | Phase 1, 3, 5, Socratic Layer 2, 4 |
@@ -158,10 +158,17 @@ User: "Research [topic]"
 === Phase 2: INVESTIGATION ===
      |
      |-> [bibliography_agent] -> Source Corpus + Annotated Bibliography
-     |   - Systematic search strategy (databases, keywords, Boolean)
-     |   - Inclusion/exclusion criteria
-     |   - PRISMA-style flow (if applicable)
-     |   - Annotated bibliography (APA 7.0)
+     |   ** PAPER_CORPUS CHECK **
+     |   If PAPER_CORPUS (Schema-2 Bibliography from `discovery` skill) is present:
+     |     → VERIFY MODE: skip self-generated search
+     |     → Pass PAPER_CORPUS directly to source_verification_agent
+     |     → Annotate each source with APA 7.0 citation from verified metadata
+     |   Else (no PAPER_CORPUS):
+     |     → SEARCH MODE (original behavior):
+     |     - Systematic search strategy (databases, keywords, Boolean)
+     |     - Inclusion/exclusion criteria
+     |     - PRISMA-style flow (if applicable)
+     |     - Annotated bibliography (APA 7.0)
      |
      +-> [source_verification_agent] -> Verified & Graded Sources
          - Evidence hierarchy grading (Level I-VII)
@@ -609,6 +616,7 @@ deep-research (systematic-review) + academic-paper -> PRISMA systematic review p
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.4 | 2026-03-26 | **bibliography_agent VERIFY MODE**: when `PAPER_CORPUS` (Schema-2 Bibliography) is provided by upstream `discovery` skill, bibliography_agent skips self-generated literature search and passes the pre-verified corpus directly to source_verification_agent; all downstream phases (synthesis, report, review) proceed normally with verified papers. VERIFY MODE is backwards-compatible — omitting PAPER_CORPUS falls back to original SEARCH MODE behavior. Agent Team table updated with VERIFY MODE note. Phase 2 INVESTIGATION workflow updated with PAPER_CORPUS conditional branch |
 | 2.3 | 2026-03-08 | Added systematic-review mode (7th mode): PRISMA 2020 compliant pipeline with risk_of_bias_agent (RoB 2 + ROBINS-I), meta_analysis_agent (effect sizes, heterogeneity, GRADE, narrative synthesis), 2 new templates (PRISMA protocol + report), systematic_review_toolkit reference. Added monitoring_agent (post-pipeline literature monitoring with digests, retraction alerts, author tracking) + literature_monitoring_strategies reference. Enhanced socratic_mentor_agent with 4 convergence signals, 4-type question taxonomy, and auto-end triggers. Added Quick Mode Selection Guide to SKILL.md |
 | 2.2 | 2025-03-05 | Added synthesis anti-patterns, Socratic quantified thresholds & auto-end conditions, reference existence verification (DOI + WebSearch), enhanced ethics reference integrity check (50% + Retraction Watch), mode transition matrix, cross-agent quality alignment definitions |
 | 2.1 | 2026-03 | Added IRB decision tree, EQUATOR reporting guidelines, preregistration guide + template; enhanced ethics_review_agent with human subjects dimension; enhanced research_architect_agent with ethics/EQUATOR/preregistration integration; enhanced methodology_patterns with EQUATOR cross-references |

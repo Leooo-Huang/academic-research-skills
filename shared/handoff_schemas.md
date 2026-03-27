@@ -106,6 +106,8 @@ Consuming agents should validate input and request re-generation if schema viola
 | Field | Type | Description |
 |-------|------|-------------|
 | `prisma_counts` | object | `{identified: int, screened: int, eligible: int, included: int}` (if systematic review) |
+| `community_signals` | object | `{trending_keywords: list[string], hot_paper_ids: list[string], pain_points: list[string], signal_sources: list[string], collection_date: string}` — populated by `discovery` skill Phase A; passed to `synthesis_agent` for gap analysis framing |
+| `discovery_phases` | object | `{community_found: int, search_candidates: int, verified: int, citation_expanded: int, final: int}` — phase-by-phase counts from `discovery` skill run |
 
 ### Example
 

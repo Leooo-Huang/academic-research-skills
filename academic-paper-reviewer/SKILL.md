@@ -458,6 +458,7 @@ Follows the paper's language. Academic terms remain in English. User can overrid
 |-------|-------------|
 | `academic-paper` | Upstream (provides paper) + Downstream (receives revision roadmap) |
 | `deep-research` | Upstream (provides research foundation) |
+| `discovery` | Upstream (optional): reviewer can receive PAPER_CORPUS from `discovery` skill for rapid paper-grounded review; COMMUNITY_SIGNALS.pain_points inform review framing |
 | `tw-hei-intelligence` | Auxiliary (verifies higher education data accuracy) |
 | `academic-pipeline` | Orchestrated by (Stage 3 + Stage 3') |
 

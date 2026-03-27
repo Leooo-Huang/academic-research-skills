@@ -1,12 +1,13 @@
 # Academic Research Skills for Claude Code
 
-[![Version](https://img.shields.io/badge/version-v2.8-blue)](https://github.com/Imbad0202/academic-research-skills/releases/tag/v2.8)
+[![Version](https://img.shields.io/badge/version-v3.0-blue)](https://github.com/Leooo-Huang/academic-research-skills/releases/tag/v3.0)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](https://creativecommons.org/licenses/by-nc/4.0/)
-[![Sponsor](https://img.shields.io/badge/sponsor-Buy%20Me%20a%20Coffee-orange?logo=buy-me-a-coffee)](https://buymeacoffee.com/crucify020v)
 
-[繁體中文版](README.zh-TW.md)
+[简体中文版](README.zh-CN.md)
 
-A comprehensive suite of Claude Code skills for academic research, covering the full pipeline from research to publication.
+**One command. 50-100 verified papers. Zero hallucinated citations. Full paper in hours, not weeks.**
+
+A comprehensive suite of Claude Code skills that automates the entire academic research pipeline — from paper discovery to publication-ready manuscripts with peer review.
 
 ---
 
@@ -19,29 +20,31 @@ A comprehensive suite of Claude Code skills for academic research, covering the 
 
 ## Features
 
+- **Discovery** — 4-phase paper discovery: community intelligence (X/Twitter/Reddit/GitHub/HuggingFace) + Semantic Scholar API (200-500 candidates) + arXiv verification + citation graph expansion = **50-100 verified papers**. No mandatory API key.
 - **Deep Research** — 13-agent research team with Socratic guided mode + systematic review / PRISMA + SCR Loop
 - **Academic Paper** — 12-agent paper writing with LaTeX output hardening, visualization, revision coaching, and citation conversion
 - **Academic Paper Reviewer** — Multi-perspective peer review with 0-100 quality rubrics (EIC + 3 dynamic reviewers + Devil's Advocate)
-- **Academic Pipeline** — Full 10-stage pipeline orchestrator with adaptive checkpoints, claim verification, and material passport
+- **Academic Pipeline** — Full 11-stage pipeline orchestrator with adaptive checkpoints, claim verification, and material passport
 
 ### Full Pipeline
 
 ```
-Research → Write → Integrity Check → Review (5-person) → Socratic Coaching
+Discover (50-100 papers) → Research → Write → Integrity Check → Review (5-person) → Socratic Coaching
   → Revise → Re-Review → Re-Revise → Final Integrity Check → Finalize
   → Process Summary (with Collaboration Quality Evaluation)
 ```
 
 **Key Features:**
-1. Adaptive checkpoints (FULL / SLIM / MANDATORY) after every stage
-2. Pre-review integrity verification — 100% reference, data, and claim validation (Phase A-E)
-3. Two-stage review with Devil's Advocate + 0-100 quality rubrics
-4. Socratic revision coaching with SCR Loop (State-Challenge-Reflect, user-togglable) between review and revision stages
-5. Final integrity verification before publication
-6. Output: MD + DOCX + LaTeX (APA 7.0 `apa7` class / IEEE / Chicago) → PDF via tectonic
-7. Post-pipeline process summary with 6-dimension collaboration quality scoring (1–100)
-8. Material passport for mid-entry provenance tracking
-9. Cross-skill mode advisor (14 scenarios + user archetypes)
+1. **Stage 0 DISCOVERY**: 50-100 verified papers from Semantic Scholar API + arXiv + community intelligence — zero hallucinated citations
+2. Adaptive checkpoints (FULL / SLIM / MANDATORY) after every stage
+3. Pre-review integrity verification — 100% reference, data, and claim validation (Phase A-E)
+4. Two-stage review with Devil's Advocate + 0-100 quality rubrics
+5. Socratic revision coaching with SCR Loop (State-Challenge-Reflect, user-togglable) between review and revision stages
+6. Final integrity verification before publication
+7. Output: MD + DOCX + LaTeX (APA 7.0 `apa7` class / IEEE / Chicago) → PDF via tectonic
+8. Post-pipeline process summary with 6-dimension collaboration quality scoring (1–100)
+9. Material passport for mid-entry provenance tracking
+10. Cross-skill mode advisor (14 scenarios + user archetypes)
 
 ---
 
@@ -143,7 +146,7 @@ cd /path/to/your/project
 mkdir -p .claude/skills
 
 # Clone the skills
-git clone https://github.com/Imbad0202/academic-research-skills.git .claude/skills/academic-research-skills
+git clone https://github.com/Leooo-Huang/academic-research-skills.git .claude/skills/academic-research-skills
 ```
 
 Then copy the `.claude/CLAUDE.md` content into your project's `.claude/CLAUDE.md` (merge with existing if you have one).
@@ -151,14 +154,14 @@ Then copy the `.claude/CLAUDE.md` content into your project's `.claude/CLAUDE.md
 > **Global installation:** To make skills available across all your projects, install to `~/.claude/skills/` instead:
 > ```bash
 > mkdir -p ~/.claude/skills
-> git clone https://github.com/Imbad0202/academic-research-skills.git ~/.claude/skills/academic-research-skills
+> git clone https://github.com/Leooo-Huang/academic-research-skills.git ~/.claude/skills/academic-research-skills
 > ```
 
 ### Method 2: As a Standalone Project
 
 ```bash
 # Clone the repo
-git clone https://github.com/Imbad0202/academic-research-skills.git
+git clone https://github.com/Leooo-Huang/academic-research-skills.git
 
 # Navigate to the project
 cd academic-research-skills
@@ -186,7 +189,7 @@ Use these skills in [Claude Cowork](https://claude.com/product/cowork) — Claud
 
 1. Clone this repo to a local folder:
    ```bash
-   git clone https://github.com/Imbad0202/academic-research-skills.git ~/academic-research-skills
+   git clone https://github.com/Leooo-Huang/academic-research-skills.git ~/academic-research-skills
    ```
 2. Open Claude Desktop → click **Cowork** tab (top bar)
 3. Select the cloned `academic-research-skills` folder as the working directory
@@ -198,7 +201,7 @@ If you already have a project folder in Cowork:
 ```bash
 cd /path/to/your/project
 mkdir -p .claude/skills
-git clone https://github.com/Imbad0202/academic-research-skills.git .claude/skills/academic-research-skills
+git clone https://github.com/Leooo-Huang/academic-research-skills.git .claude/skills/academic-research-skills
 ```
 
 Skills will auto-load when relevant to your conversation — e.g., saying "help me write a paper" triggers `academic-paper`.
@@ -213,7 +216,8 @@ You can load these skills via claude.ai's Project feature without installing Cla
 
 **Steps:**
 
-1. Download all 4 `SKILL.md` files from this repo:
+1. Download all 5 `SKILL.md` files from this repo:
+   - `discovery/SKILL.md`
    - `deep-research/SKILL.md`
    - `academic-paper/SKILL.md`
    - `academic-paper-reviewer/SKILL.md`
@@ -340,7 +344,26 @@ You: "status"
 
 ## Skill Details
 
-### Deep Research (v2.3)
+### Discovery (v2.1) — Python-first API Access
+
+4-phase pipeline for hallucination-free paper discovery. **Python script handles all API calls** with proper rate limiting and exponential backoff; WebFetch is a fallback when Python is unavailable.
+
+| Phase | What it does | Method |
+|-------|-------------|--------|
+| A: Community Intelligence | Trending keywords, hot papers, pain points | last30days skill (preferred) or WebSearch |
+| B: Systematic Search | 200-500 candidates from S2 + arXiv + HuggingFace + GitHub | Python `research_radar.py --mode search` via Bash |
+| C: Verification | Verify each arXiv paper; discard unresolvable | Python `research_radar.py --mode verify` via Bash |
+| D: Citation Expansion | References + citations for top papers | Python `research_radar.py --mode expand` via Bash |
+
+**Output**: 50-100 verified papers, Schema-2-compliant Bibliography with COMMUNITY_SIGNALS artifact
+
+**Python dependency (recommended):** `pip install requests arxiv huggingface-hub` — enables fast, rate-controlled API access. Without Python, falls back to WebFetch (same results, slower, may hit rate limits).
+
+**Modes:** standard (50-100), recent (30-60), comprehensive (80-100), venue (30-60), pipeline
+
+---
+
+### Deep Research (v2.4)
 
 13-agent pipeline for rigorous academic research:
 
@@ -401,13 +424,14 @@ You: "status"
 
 **Decision mapping:** ≥80 Accept, 65-79 Minor Revision, 50-64 Major Revision, <50 Reject
 
-### Academic Pipeline (v2.6)
+### Academic Pipeline (v2.8)
 
-10-stage orchestrator with integrity verification, two-stage review, Socratic coaching, and collaboration evaluation:
+11-stage orchestrator with discovery, integrity verification, two-stage review, Socratic coaching, and collaboration evaluation:
 
 | Stage | Skill | Purpose |
 |-------|-------|---------|
-| 1. RESEARCH | deep-research | Clarify RQ, find literature |
+| **0. DISCOVERY** | **discovery** | **50-100 verified papers from S2 API + arXiv + community signals** |
+| 1. RESEARCH | deep-research | Clarify RQ, find literature (PAPER_CORPUS feeds bibliography_agent VERIFY MODE) |
 | 2. WRITE | academic-paper | Draft the paper |
 | **2.5. INTEGRITY** | **integrity_verification_agent** | **100% reference & data verification (v2.0: anti-hallucination mandate)** |
 | 3. REVIEW | academic-paper-reviewer | 5-person review (EIC + R1/R2/R3 + Devil's Advocate) |
@@ -455,6 +479,39 @@ https://github.com/Imbad0202/academic-research-skills
 ---
 
 ## Changelog
+
+### v3.0 (2026-03-27) — Discovery v2.1: Python-first API Access
+
+- **discovery v2.1**: Python script (`research_radar.py`) as primary API engine for Phases B/C/D
+  - Migrated from project-specific script to `discovery/scripts/`; fixed paperId truncation, date logic, missing abstract field
+  - Three modes: `--mode search` (S2 + arXiv + HF + GitHub), `--mode verify` (batch arXiv verification), `--mode expand` (citation graph)
+  - Proper rate limiting with exponential backoff (10s → 30s → 120s on S2 429)
+  - `--output-json` for programmatic consumption by Claude via Bash
+  - Graceful degradation: missing `requests` outputs clean JSON error, skill falls back to WebFetch
+  - WebFetch retained as fallback when Python is unavailable
+  - Added `Bash` to `allowed-tools`
+  - `requirements.txt` for Python dependencies
+- **PIS scoring system**: Multi-dimensional Paper Importance Score with age-based phased weights
+  - Citation velocity (time-adjusted), domain-aware venue scoring, community signal integration, exponential recency decay (lambda=0.04)
+  - New papers (<6mo): relevance 0.65 dominates; mature papers (>18mo): velocity 0.20 dominates
+- **Phase B4 pre-filtering**: Abstract-based quality filter reduces Phase C verification load by ~70%
+- **Phase D temporal triage**: Skip citation expansion for papers < 3 months old (no citations accumulated yet)
+- Added `research-workflow.md` to `academic-pipeline/references/` (6-stage research methodology)
+- Removed `README.zh-TW.md`; added `README.zh-CN.md` (Simplified Chinese)
+
+### v2.9 (2026-03-26) — Discovery v2.0: Community Intelligence + Semantic Scholar API
+
+- **discovery v2.0** (new skill): Four-phase paper discovery pipeline that scales from 15-30 papers (v1.0) to 50-100 verified papers
+  - Phase A: Community intelligence via WebSearch on X/Twitter, Reddit, GitHub, HuggingFace — extracts trending_keywords, hot_paper_ids, pain_points as COMMUNITY_SIGNALS artifact
+  - Phase B: Semantic Scholar API bulk search via WebFetch (`api.semanticscholar.org/graph/v1/paper/search`, 100/query × 3-4 queries) + arXiv WebSearch for recent papers
+  - Phase C: WebFetch verification on each arXiv abstract page — discard over guess
+  - Phase D: Citation graph expansion via S2 references/citations API for top 10 papers
+  - **No mandatory API key** — free tier (100 req/5min); optional `S2_API_KEY` (free, 1000 req/5min)
+  - COMMUNITY_SIGNALS passed to `synthesis_agent` for gap analysis framing
+- **academic-pipeline v2.8**: Stage 0 upgraded to discovery v2.0; Integration section updated with 50-100 paper targets per mode; COMMUNITY_SIGNALS flow documented
+- **deep-research v2.4**: `synthesis_agent` now uses `community_signals.pain_points` for gap analysis when PAPER_CORPUS includes community signals
+- **shared/handoff_schemas.md**: Schema 2 optional fields extended with `community_signals` and `discovery_phases`
+- Added `CONTRIBUTING.md` for GitHub PR standards
 
 ### v2.8 (2026-03-22) — SCR Loop Phase 1: State-Challenge-Reflect
 - **Socratic Mentor Agent** (deep-research + academic-paper): SCR (State-Challenge-Reflect) protocol integration

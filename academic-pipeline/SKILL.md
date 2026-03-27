@@ -2,12 +2,12 @@
 name: academic-pipeline
 description: "Orchestrator for the full academic research pipeline: research -> write -> integrity check -> review -> revise -> re-review -> re-revise -> final integrity check -> finalize. Coordinates deep-research, academic-paper, and academic-paper-reviewer into a seamless 9-stage workflow with mandatory integrity verification, two-stage peer review, and reproducible quality gates. Triggers on: academic pipeline, research to paper, full paper workflow, paper pipeline, end-to-end paper, research-to-publication, complete paper workflow."
 metadata:
-  version: "2.6"
-  last_updated: "2026-03-08"
-  depends_on: "deep-research, academic-paper, academic-paper-reviewer"
+  version: "2.7"
+  last_updated: "2026-03-26"
+  depends_on: "discovery, deep-research, academic-paper, academic-paper-reviewer"
 ---
 
-# Academic Pipeline v2.6 — Full Academic Research Workflow Orchestrator
+# Academic Pipeline v2.7 — Full Academic Research Workflow Orchestrator
 
 A lightweight orchestrator that manages the complete academic pipeline from research exploration to final manuscript. It does not perform substantive work — it only detects stages, recommends modes, dispatches skills, manages transitions, and tracks state.
 
@@ -18,6 +18,7 @@ A lightweight orchestrator that manages the complete academic pipeline from rese
 4. **Final integrity check** — After revision completion, re-verify all citations and data are 100% correct
 5. **Reproducible** — Standardized workflow producing consistent quality assurance each time
 6. **Process documentation** — After pipeline completion, automatically generates a "Paper Creation Process Record" PDF documenting the human-AI collaboration history
+7. **Real-time paper discovery** — Stage 0 (DISCOVERY) uses `discovery` v2.0 skill (four-phase: community intelligence via X/Reddit/GitHub/HuggingFace + Semantic Scholar API + arXiv verification + citation expansion) to retrieve 50-100 live, verified papers before research begins; eliminates `bibliography_agent` hallucinated citations; COMMUNITY_SIGNALS passed to synthesis_agent for research gap framing
 
 ## Quick Start
 
@@ -76,6 +77,7 @@ I received reviewer comments, help me revise
 
 | Stage | Name | Skill / Agent Called | Available Modes | Deliverables |
 |-------|------|---------------------|----------------|-------------|
+| **0** | **DISCOVERY** | **`discovery`** | **standard, recent, comprehensive, venue** | **Verified Paper Corpus (Schema-2 Bibliography)** |
 | 1 | RESEARCH | `deep-research` | socratic, full, quick | RQ Brief, Methodology, Bibliography, Synthesis |
 | 2 | WRITE | `academic-paper` | plan, full | Paper Draft |
 | **2.5** | **INTEGRITY** | **`integrity_verification_agent`** | **pre-review** | **Integrity verification report + corrected paper** |
@@ -91,6 +93,7 @@ I received reviewer comments, help me revise
 
 ## Pipeline State Machine
 
+0. **Stage 0 DISCOVERY** -> user confirmation -> Stage 1 (passes PAPER_CORPUS; bibliography_agent enters VERIFY MODE)
 1. **Stage 1 RESEARCH** -> user confirmation -> Stage 2
 2. **Stage 2 WRITE** -> user confirmation -> Stage 2.5
 3. **Stage 2.5 INTEGRITY** -> PASS -> Stage 3 (FAIL -> fix and re-verify, max 3 rounds)
@@ -179,7 +182,9 @@ Ready to proceed to Stage [Y]? You can also:
 pipeline_orchestrator_agent analyzes the user's input:
 
 1. What materials does the user have?
-   - No materials           --> Stage 1 (RESEARCH)
+   - No materials + topic known    --> Stage 0 (DISCOVERY) [recommended: live paper retrieval]
+   - No materials + no topic       --> Stage 1 (RESEARCH, socratic mode)
+   - Has PAPER_CORPUS (from Stage 0) --> Stage 1 (RESEARCH, bibliography_agent: VERIFY MODE)
    - Has research data      --> Stage 2 (WRITE)
    - Has paper draft        --> Stage 2.5 (INTEGRITY)
    - Has verified paper     --> Stage 3 (REVIEW)
@@ -230,6 +235,7 @@ After user confirmation:
 
 1. Pass the previous stage's deliverables as input to the next stage
 2. Trigger handoff protocol (defined in each skill's SKILL.md):
+   - Stage 0  --> 1: discovery handoff (PAPER_CORPUS Schema-2 Bibliography; bibliography_agent enters VERIFY MODE)
    - Stage 1  --> 2: deep-research handoff (RQ Brief + Bibliography + Synthesis)
    - Stage 2  --> 2.5: Pass complete paper to integrity_verification_agent
    - Stage 2.5 --> 3: Pass verified paper to reviewer
@@ -480,6 +486,7 @@ Users can say "status" or "pipeline status" at any time to view:
 |        Quality Assurance                    |
 +---------------------------------------------+
 
+  Stage 0   DISCOVERY         [v] Completed (72 papers verified, 8 community signals)
   Stage 1   RESEARCH          [v] Completed
   Stage 2   WRITE             [v] Completed
   Stage 2.5 INTEGRITY         [v] PASS (62/62 refs verified)
@@ -542,6 +549,7 @@ Started: [time]
 Completed: [time]
 Total Stages: [X/9]
 
+Stage 0 DISCOVERY: [mode] -> [N papers verified, N discarded]
 Stage 1 RESEARCH: [mode] -> [output count]
 Stage 2 WRITE: [mode] -> [word count]
 Stage 2.5 INTEGRITY: [PASS/FAIL] -> [refs verified] / [issues found -> fixed]
@@ -764,6 +772,14 @@ Follows user language. Academic terminology retained in English.
 ```
 academic-pipeline dispatches the following skills (does not do work itself):
 
+Stage 0: discovery (v2.0)
+  - standard mode: Past 24 months, 50-100 papers (Phase A community signals + Phase B S2 API + Phase C verification + Phase D citation expansion)
+  - recent mode: Past 6 months, 30-60 papers
+  - comprehensive mode: Past 5 years, 80-100 papers
+  - venue mode: Conference-specific papers, 30-60 papers
+  → Outputs PAPER_CORPUS (Schema-2 Bibliography with COMMUNITY_SIGNALS) → bibliography_agent enters VERIFY MODE in Stage 1
+  → COMMUNITY_SIGNALS.pain_points passed to synthesis_agent for gap analysis framing
+
 Stage 1: deep-research
   - socratic mode: Guided research exploration
   - full mode: Complete research report
@@ -798,7 +814,8 @@ Stage 5: academic-paper (format-convert mode)
 
 | Skill | Relationship |
 |-------|-------------|
-| `deep-research` | Dispatched (Stage 1 research phase) |
+| `discovery` | Dispatched (Stage 0 live paper retrieval; outputs PAPER_CORPUS for Stage 1) |
+| `deep-research` | Dispatched (Stage 1 research phase; bibliography_agent enters VERIFY MODE if PAPER_CORPUS provided) |
 | `academic-paper` | Dispatched (Stage 2 writing, Stage 4/4' revision, Stage 5 formatting) |
 | `academic-paper-reviewer` | Dispatched (Stage 3 first review, Stage 3' verification review) |
 
@@ -808,10 +825,10 @@ Stage 5: academic-paper (format-convert mode)
 
 | Item | Content |
 |------|---------|
-| Skill Version | 2.6 |
-| Last Updated | 2026-03-08 |
+| Skill Version | 2.8 |
+| Last Updated | 2026-03-26 |
 | Maintainer | Cheng-I Wu |
-| Dependent Skills | deep-research v2.0+, academic-paper v2.0+, academic-paper-reviewer v1.1+ |
+| Dependent Skills | discovery v2.0+, deep-research v2.4+, academic-paper v2.0+, academic-paper-reviewer v1.1+ |
 | Role | Full academic research workflow orchestrator |
 
 ---
@@ -820,6 +837,8 @@ Stage 5: academic-paper (format-convert mode)
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.8 | 2026-03-26 | **discovery v2.0 integration**: Stage 0 upgraded from two-phase WebSearch+WebFetch (15-30 papers) to four-phase pipeline (50-100 papers): Phase A community intelligence via X/Twitter/Reddit/GitHub/HuggingFace WebSearch, Phase B Semantic Scholar API bulk search (200-500 candidates), Phase C arXiv WebFetch verification, Phase D citation graph expansion. COMMUNITY_SIGNALS artifact added: trending_keywords + hot_paper_ids + pain_points passed to synthesis_agent for gap analysis framing. Integration section updated with new mode paper counts. All mode targets updated (standard: 50-100, recent: 30-60, comprehensive: 80-100). S2_API_KEY optional (free, no API key required by default). |
+| 2.7 | 2026-03-26 | **Stage 0 DISCOVERY**: New `discovery` skill added as optional pre-research stage; outputs Schema-2-compliant PAPER_CORPUS; when provided, `bibliography_agent` enters VERIFY MODE; INTAKE & DETECTION updated with PAPER_CORPUS branch; Audit Trail and Progress Dashboard extended with Stage 0 row |
 | 2.6 | 2026-03-08 | **Handoff Data Schema**: Enhanced `shared/handoff_schemas.md` with 9 comprehensive schemas (RQ Brief, Bibliography, Synthesis, Paper Draft, Integrity Report, Review Report, Revision Roadmap, Response to Reviewers, Material Passport) with full field definitions, type constraints, and validation rules; orchestrator validates output against schemas before each transition. **Adaptive Checkpoint System**: Replaced static checkpoint template with 3-tier system (FULL/SLIM/MANDATORY) based on stage criticality and user engagement; FULL checkpoints include decision dashboard with metrics; SLIM auto-continues for experienced users; MANDATORY cannot be bypassed at integrity/review/finalization boundaries; awareness guard after 4+ auto-continues. **Mode Advisor**: New `references/mode_advisor.md` with unified cross-skill decision tree, common misconceptions table, user archetype recommendations, decision flowchart, and anti-patterns guide. **Team Collaboration Protocol**: New `references/team_collaboration_protocol.md` with 5 role definitions, per-transition handoff procedures, git branching/tagging strategy, conflict resolution matrix, and communication templates; state tracker extended with `assigned_to`, `approval_gate`, `team_notes` per stage and `schema_validation_log`. **Phase E Claim Verification**: New `references/claim_verification_protocol.md` with E1 claim extraction, E2 source tracing, E3 cross-referencing; verdict taxonomy (VERIFIED / MINOR_DISTORTION / MAJOR_DISTORTION / UNVERIFIABLE / UNVERIFIABLE_ACCESS); severity mapping (MAJOR_DISTORTION -> SERIOUS, UNVERIFIABLE -> SERIOUS, MINOR_DISTORTION -> MINOR, UNVERIFIABLE_ACCESS -> MEDIUM); integrated into integrity_verification_agent Mode 1 (30% spot-check) and Mode 2 (100%); pass/fail criteria updated to include Phase E verdicts. **Mid-Entry Material Passport Check**: Pipeline orchestrator now validates Material Passport on mid-entry; decision tree checks verification_status, freshness (< 24 hours), and content modification (version_label comparison); offers skip/spot-check/full re-verify options for Stage 2.5 when passport is valid; passport freshness validation rules added to `shared/handoff_schemas.md` |
 | 2.5 | 2026-03-08 | External Review Protocol: structured intake of real journal reviewer feedback (text/PDF/DOCX); 4-step workflow (parse -> strategic coaching -> revise + Response to Reviewers -> completeness check); differentiated behavior from internal simulated review (no default "accept all", risk assessment per comment, user confirmation of parsed items); explicit capability boundaries (AI verification ≠ reviewer satisfaction) |
 | 2.4 | 2026-03-08 | Stage 6 PROCESS SUMMARY: post-pipeline paper creation process record; asks user preferred language (zh/en/both); generates structured MD summarizing full human-AI collaboration history with user quotes, key decisions, iteration details, and lessons learned; mandatory final chapter: **Collaboration Quality Evaluation** (6 dimensions scored 1-100, bar chart visualization, What Worked Well / Missed Opportunities / Recommendations / Human vs AI Value-Add / Claude's Self-Reflection); compiles to PDF via LaTeX + tectonic; outputs `paper_creation_process_zh.pdf` + `paper_creation_process_en.pdf` |
