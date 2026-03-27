@@ -3,18 +3,13 @@
 [![Version](https://img.shields.io/badge/version-v3.0-blue)](https://github.com/Leooo-Huang/academic-research-skills/releases/tag/v3.0)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)](https://creativecommons.org/licenses/by-nc/4.0/)
 
-[简体中文版](README.zh-CN.md)
-
 **One command. 50-100 verified papers. Zero hallucinated citations. Full paper in hours, not weeks.**
+
+一条命令。50-100 篇验证论文。零幻觉引用。几小时完成从文献发现到可投稿论文的全流程。
 
 A comprehensive suite of Claude Code skills that automates the entire academic research pipeline — from paper discovery to publication-ready manuscripts with peer review.
 
----
-
-## Guides & Articles
-
-- [Academic Writing Shouldn't Be a Solo Act](https://open.substack.com/pub/edwardwu223235/p/academic-writing-shouldnt-be-a-solo?r=4dczl&utm_medium=ios) — A detailed walkthrough of the full pipeline workflow (English)
-- [學術寫作不該是一個人的事：一套開源 AI 協作工具如何改變研究者的工作流](https://open.substack.com/pub/edwardwu223235/p/ai?r=4dczl&utm_medium=ios) — 完整使用指南（繁體中文）
+一套完整的 Claude Code 技能，自动化学术研究全流程——从论文发现、深度分析、论文写作到同行评审。
 
 ---
 
